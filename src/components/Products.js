@@ -31,20 +31,36 @@ function Products() {
 
   const addToCart = (e) => {
     e.preventDefault();
-    const item = e.target.id;
+    // event returns item id
+    const itemId = Number(e.target.id);
     const cartContent = Object.keys(cart);
+    const itemCount = 1;
 
-    if (cartContent.includes(item)) {
-      console.log("not included")
-      const newVal = cart[item] + 1;
-      setCart({...cart, [item]: newVal});
+    // find the stock object in the array
+    // calculate new instock value
+    const stockEntry = stock.filter((s) => s.id === itemId)[0];
+    const itemName = stockEntry.name;
+    const stockIndex = stock.findIndex((obj) => obj.id === stockEntry.id);
+    const newStockCount = stockEntry.instock - itemCount;
+
+    if (cartContent.includes(itemName)) {
+      // if the item is already in the cart
+      if (itemCount <= stockEntry.instock) {
+        const newVal = cart[itemName] + 1;
+
+        setCart({...cart, [itemName]: newVal});
+
+        stock[stockIndex] = {...stockEntry, instock: newStockCount};
+        setStock(stock);
+      }
+
+    } else {
+      // if the item is not in the cart
+      setCart({...cart, [itemName]: 1});
+
+      stock[stockIndex] = {...stockEntry, instock: newStockCount};
+      setStock(stock);
     };
-
-    if (!cartContent.includes(item)) {
-      setCart({...cart, [item]: 1});
-    };
-
-    console.log("cart content: ", cart)
   };
 
   return (
@@ -63,7 +79,7 @@ function Products() {
                     <Card.Body>
                       <form
                           onSubmit={addToCart}
-                          id={s.name}
+                          id={s.id}
                       >
                         Stock: {s.instock}<br />
                         <Button type="submit">+</Button>
@@ -75,6 +91,9 @@ function Products() {
           </Col>
           <Col>
             <h3>Cart Content</h3>
+            {Object.keys(cart).map((key, i) => (
+                <p key={i}>{key}: {cart[key]}</p>
+            ))}
           </Col>
           <Col>
             <h3>Check Out</h3>
