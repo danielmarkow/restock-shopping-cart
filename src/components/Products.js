@@ -9,25 +9,26 @@ import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 
 function Products() {
-  const [query, setQuery] = useState("products");
+  const [url, setUrl] = useState("http://localhost:1337/products");
   const [stock, setStock] = useState([]);
   const [cart, setCart] = useState({});
 
-  const fetchData = () => {
-    console.log("fetched data")
-    axios.get(`http://localhost:1337/${query}`)
-        .then((resp) => {
-          return resp.data
-        })
-        .then((data) => {
-          setStock(data)
-        })
-        .catch((err) => console.log(`error fetching data: ${err}`));
-  }
-
+  // fetch data from api whenever url is changed
   useEffect(() => {
+    const fetchData = () => {
+      console.log(new Date(), "fetched data")
+      axios.get(url)
+          .then((resp) => {
+            return resp.data
+          })
+          .then((data) => {
+            setStock(data)
+          })
+          .catch((err) => console.log(`error fetching data: ${err}`));
+    };
+
     fetchData();
-  }, []);
+  }, [url]);
 
   const addToCart = (e) => {
     e.preventDefault();
@@ -77,6 +78,8 @@ function Products() {
     return price;
   };
 
+  const restockProducts = () => {};
+
   return (
       <Container>
         <Row>
@@ -120,6 +123,11 @@ function Products() {
             <Button>Check out</Button>
           </Col>
         </Row>
+        <form onSubmit={restockProducts}>
+          <input
+              type="text"
+          /><Button>Restock</Button>
+        </form>
       </Container>
   );
 }
