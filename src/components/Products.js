@@ -13,7 +13,7 @@ function Products() {
   const [stock, setStock] = useState([]);
   const [cart, setCart] = useState({});
 
-  // fetch data from api whenever url is changed
+  // fetch data from api
   const fetchData = () => {
     console.log(new Date(), "fetched data")
     axios.get(url)
@@ -26,7 +26,10 @@ function Products() {
         .catch((err) => console.log(`error fetching data: ${err}`));
   };
 
-  useEffect(fetchData, [url]);
+  // url is not dependend because refresh should only happen on mount and when
+  // the button is clicked
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(fetchData, []);
 
   const addToCart = (e) => {
     e.preventDefault();
@@ -76,12 +79,6 @@ function Products() {
     return price;
   };
 
-  // const restockProducts = (e) => {
-  //   e.preventDefault();
-  //   // setUrl(e.target.apiUrl.value);
-  //   setUrl("http://test")
-  // };
-
   return (
       <Container>
         <Row>
@@ -125,6 +122,7 @@ function Products() {
             <Button>Check out</Button>
           </Col>
         </Row>
+          <input type="input" value={url} onChange={(e) => setUrl(e.target.value)} /> 
           <Button onClick={fetchData}>Restock</Button>
       </Container>
   );
