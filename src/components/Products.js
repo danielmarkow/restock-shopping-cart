@@ -14,21 +14,19 @@ function Products() {
   const [cart, setCart] = useState({});
 
   // fetch data from api whenever url is changed
-  useEffect(() => {
-    const fetchData = () => {
-      console.log(new Date(), "fetched data")
-      axios.get(url)
-          .then((resp) => {
-            return resp.data
-          })
-          .then((data) => {
-            setStock(data)
-          })
-          .catch((err) => console.log(`error fetching data: ${err}`));
-    };
+  const fetchData = () => {
+    console.log(new Date(), "fetched data")
+    axios.get(url)
+        .then((resp) => {
+          return resp.data
+        })
+        .then((data) => {
+          setStock(data)
+        })
+        .catch((err) => console.log(`error fetching data: ${err}`));
+  };
 
-    fetchData();
-  }, [url]);
+  useEffect(fetchData, [url]);
 
   const addToCart = (e) => {
     e.preventDefault();
@@ -78,7 +76,11 @@ function Products() {
     return price;
   };
 
-  const restockProducts = () => {};
+  // const restockProducts = (e) => {
+  //   e.preventDefault();
+  //   // setUrl(e.target.apiUrl.value);
+  //   setUrl("http://test")
+  // };
 
   return (
       <Container>
@@ -123,11 +125,7 @@ function Products() {
             <Button>Check out</Button>
           </Col>
         </Row>
-        <form onSubmit={restockProducts}>
-          <input
-              type="text"
-          /><Button>Restock</Button>
-        </form>
+          <Button onClick={fetchData}>Restock</Button>
       </Container>
   );
 }
