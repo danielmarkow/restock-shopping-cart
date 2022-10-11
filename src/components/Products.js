@@ -26,7 +26,7 @@ function Products() {
         .catch((err) => console.log(`error fetching data: ${err}`));
   };
 
-  // url is not dependend because refresh should only happen on mount and when
+  // url is not dependent because refresh should only happen on mount and when
   // the button is clicked
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(fetchData, []);
